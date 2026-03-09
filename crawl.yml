@@ -1,0 +1,49 @@
+name: AI Datacenter News Crawler
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # 毎日 09:00 JST（UTC 0:00）
+    - cron: "0 9 * * *"   # 毎日 18:00 JST（UTC 9:00）
+  workflow_dispatch:
+
+# GitHub Pages へのデプロイ権限
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run crawler
+        env:
+          NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+          OUTPUT_FILE: news_data.json
+          RSS_OUTPUT_FILE: docs/news_feed.xml
+          # リポジトリ情報から GitHub Pages URL を自動生成
+          GITHUB_PAGES_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: python crawler.py
+
+      - name: Commit updated files
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add news_data.json docs/news_feed.xml
+          git diff --cached --quiet || git commit -m "chore: update news feed [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push
