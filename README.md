@@ -1,4 +1,4 @@
-# AI Datacenter News Crawler 🤖
+# News Crawler 
 
 NewsAPI と RSS フィードから「AI datacenter / データセンター」関連ニュースを定期取得し、JSON に蓄積 + **RSS フィードを GitHub Pages で公開** → **Slack RSS App で通知** するクローラーです。
 
