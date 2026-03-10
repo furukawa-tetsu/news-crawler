@@ -105,7 +105,7 @@ RSS ファイルが生成されたことを確認:
 通知を受け取りたい Slack チャンネルで以下を入力するだけ:
 
 ```
-/feed subscribe https://YOUR_USERNAME.github.io/YOUR_REPO/news_feed.xml
+/feed subscribe https://github.com/furukawa-tetsu/news-crawler/news_feed.xml
 ```
 
 > 💡 管理者承認不要！チャンネルメンバーなら誰でも設定できます。
